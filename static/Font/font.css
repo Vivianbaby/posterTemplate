@@ -1,0 +1,166 @@
+
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1607508659830'); /* IE9 */
+  src: url('iconfont.eot?t=1607508659830#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAATMAAsAAAAAChwAAAR9AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDdAqGLIUwATYCJAMgCxIABCAFhG0HgQEbwwjIjpHbimX55flq/tNv2p87A2SY6JrTNdOskZoNKTW6hKwoXX8iZnn+ZRYe8nfv/CPZpCQLRRUJUZIEm00QolCSorhYWxXxdISm22iERm2iksQ8MSQyWSNDo+mLeamf/tsnCyG+Rey62erBBJ4PBJAGGovG5Wu3QNCImxGANjdbB+Ex0BJyiUCMiH1zLJ0OnahOYC8DOM34fPowOQTA6AXitul1WSMWvvTdIB4Wb5UaCsLqbABuBwEcMBagAT2RjhPBrfBYnPwka6oBKekvcihQQStMLywo1Bf2fjeoWAw0Q0GFGrAKiOAMOjbYfx6ogaiIAd8YiUCBFIGj1KADh3I6dDCgXAAddCjroQODci/YQPDdINGWUwhtnxSgD+BvqIeommvMEzSchjBmSpJ4hEqhY3uPtPReQu5JUBLUUhxk8dXimo4SiEeMKTJyDvZOOgcIz5axE88l6jwv2uDllhAnUTLxyd1j5/ak8ypI7yU0fa9koL2UbtzSeWFP+9xzqXNE/BqcfXb3LWefD+2+oMfWc87pEQ6NXVvdTXtlzruIvGvemZF5771MhiQL3+5//s1Dr35++L3vjr7zXdoeb7+z5WIkIxN/5z37XZve057jvXdlDM/dYrErbpYVPHoSwrdlKY8+t+qGdxDKaQvVDRkJufxvG7nsUAa5PG0vwp3qwnUX/vPKulfuV2SOswyPvW0+ZI4RD5uhwUNq8R3zYXO06ROStvg25CJSFWYqxEdnXJE2JhhpbVyfoOuOy37+9rN0ffosf7fu0HFw2nfy8m+2liz+mht4OmWwrxezyDeXyzejf3ZmpJ6GUd5fFMeP71yemLoiUt09fSju4PR/aidOZKVP3Pjn/r7+V88sKZlwhTgZ6b/2K+2ysa9Pe90cZW/Cp5PERTjJRrUr35WGkuWrsMy6a9XhXr0mvtn37r5vTH2yIrns7EPLVixfvrp07sptfe4csGTc5dfjAPFMfGYXAQCf2N0AwBcWfs9ysJuA4uPsF74AKJ6RM7hkro69dh1+D4K9qqQmOfc3EdUAAB/9/tRdhiB75QIAAoOb8Kqrq6sBQBvuYtEo8t1a4WdWacW9ECYelK0YQJKAIjxdfVqlqkdmKkCqHg4wEQOAE4aiNfxY0EVNBYOwAKQxVhwc1Y2PozQBjHaEAUm5DZiEx4BLeQWt4T8BXU8/gyEVHCQ7uh0zani4comv6gLVaNXvstwGr92RzYE0czepbL61zneLDZqt/JzrsyaNn+iPrVDtyq9ih9z27OQgcCzH99qs5exiqrXVszp8r1k1BOObgqBj9oQJTtQbjW/w2iAt4VPqBJRGlnq7WFwNPO0crXdABj5+EyUrr1UdP6Hlh9Om+HLc6S2TjDcxA3qFoj1Ty64sztkua7JAwOE2cvg8bSzLYVNapbDH0hG9qpnSIDBeU4Fgh9kmUCcnq2J886q2Nd0HIIl3EsGIk0Y6GRQhQSbE6eUb8+42N6bNcOras7kmt6vrC2p2N3nt2f4Ndd7uvFcTach7/xJaRVupHgAAAA==') format('woff2'),
+  url('iconfont.woff?t=1607508659830') format('woff'),
+  url('iconfont.ttf?t=1607508659830') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1607508659830#iconfont') format('svg'); /* iOS 4.1- */
+}
+@font-face {
+    font-family: "naicha";
+    src: url('naicha.ttf') format('truetype')
+}
+@font-face {
+    font-family: "rimanfeng";
+    src: url('rimanfen.ttf') format('truetype')
+}
+@font-face {
+    font-family: "W05";
+    src: url('W05.ttf') format('truetype')
+}
+@font-face {
+    font-family: "yegenyou";
+    src: url('yegenyou.ttf') format('truetype')
+}
+@font-face {
+    font-family: "simyou";
+    src: url('SIMYOU.TTF') format('truetype')
+}
+
+@font-face {
+    font-family: "IMPACT";
+    src: url('IMPACT.TTF') format('truetype')
+}
+.IMPACT{
+    font-family: 'IMPACT';
+}
+@font-face {
+    font-family: "sanjihua";
+    src: url('sanjihua.ttf') format('truetype')
+}
+.sanjihua{
+    font-family: 'sanjihua';
+}
+@font-face {
+    font-family: "AGENCYB";
+    src: url('AGENCYB.TTF') format('truetype')
+}
+.AGENCYB{
+    font-family: 'AGENCYB';
+}
+@font-face {
+    font-family: "CONSTANB";
+    src: url('CONSTANB.TTF') format('truetype')
+}
+.CONSTANB{
+    font-family: 'CONSTANB';
+}
+@font-face {
+    font-family: "CONSOLA";
+    src: url('CONSOLA.TTF') format('truetype')
+}
+.CONSOLA{
+    font-family: 'CONSOLA';
+}
+@font-face {
+    font-family: "ARIAL";
+    src: url('ARIAL.TTF') format('truetype')
+}
+.CONSOLA{
+    font-family: 'ARIAL';
+}
+@font-face {
+    font-family: "ARIALBD";
+    src: url('ARIALBD.TTF') format('truetype')
+}
+.CONSOLA{
+    font-family: 'ARIALBD';
+}
+@font-face {
+    font-family: "BAHNSCHRIFT";
+    src: url('BAHNSCHRIFT.TTF') format('truetype')
+}
+.CONSOLA{
+    font-family: 'BAHNSCHRIFT';
+}
+@font-face {
+    font-family: "BLACKSWORD";
+    src: url('BLACKSWORD.OTF') format('truetype')
+}
+.BLACKSWORD{
+    font-family: 'BLACKSWORD';
+}
+@font-face {
+    font-family: "FZY1JW";
+    src: url('FZY1JW.TTF') format('truetype')
+}
+.FZY1JW{
+    font-family: 'FZY1JW';
+}
+@font-face {
+    font-family: "HYQIHEI";
+    src: url('HYQIHEI-80J.TTF') format('truetype')
+}
+.HYQIHEI{
+    font-family: 'HYQIHEI';
+}
+
+
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 24px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-youduiqi:before {
+  content: "\e67c";
+}
+
+.icon-duiqifangshi:before {
+  content: "\e662";
+}
+
+.icon-duiqifangshi_zhong:before {
+  content: "\e604";
+}
+
+.icon-caozuo_duiqifangshi_zuoduiqi:before {
+  content: "\e81f";
+}
+
+.icon-I:before {
+  content: "\e63f";
+}
+
+.icon-U:before {
+  content: "\e636";
+}
+
+.icon-b:before {
+  content: "\e601";
+}
+
+
+.naicha{
+    font-family: 'naicha';
+}
+.rimanfeng{
+    font-family: 'rimanfeng';
+}
+.W05{
+    font-family: 'W05';
+}
+.test{
+    font-family: 'test';
+}
+.yegenyou{
+    font-family: 'yegenyou';
+}
+.simyou{
+    font-family: 'simyou';
+}
+

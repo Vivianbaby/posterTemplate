@@ -1,0 +1,19 @@
+.temp-search-wrap{
+    padding-top: 30px;
+    background: #f1f1f1;
+
+}
+.temp-search-wrap .el-form-item{
+    width: 900px;
+    margin: 0 auto;
+}
+.temp-search-wrap .el-form-item__content{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.temp-search-wrap .el-tag{
+    margin:  3px 5px 3px 0;
+    cursor: pointer;
+}
