@@ -1,6 +1,7 @@
 <template>
     <div id="usePosterWrap">
         <div class="temp-btn" >
+            <el-button type="primary" size="small"  style="float: left" @click="$router.back()">返回</el-button>
             <el-button type="primary" size="small" @click="onSave(false)">保存</el-button>
             <el-button type="default" size="small" @click="onPreview">预览</el-button>
             <el-button type="warning" size="small" @click="onPublish">定稿</el-button>
@@ -44,12 +45,24 @@
                     </div>
                     <div  v-if="curImgUrl">
                         <div class="title">更换产品</div>
+                        <div class="text">{{imgForm.width}}*{{imgForm.height}}</div>
                         <div class="img">
                             <img :src="curImgUrl" />
                         </div>
                         <div class="item">
-                            <el-button type="default"  icon="el-icon-plus" @click="selectOption">选择图片</el-button>
-                            <el-button type="primary">确定</el-button>
+
+                            <el-button v-if="!isUploadImg" type="default"  icon="el-icon-plus" @click="selectOption">选择图片</el-button>
+                            <el-upload
+                                    v-else
+                                    class="avatar-uploader"
+                                    :action="$uploadApi"
+                                    :show-file-list="false"
+                                    :on-success="onSuccess">
+                                <el-button size="small" type="primary">点击上传</el-button>
+                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                            </el-upload>
+                            <el-button  v-if="!isUploadImg"  type="primary">确定</el-button>
+
                         </div>
                     </div>
                 </div>
@@ -109,11 +122,11 @@
 
     import priceItem from '@/components/price-item'
     import pictureItem from '@/components/picture-item'
-
     export default {
         components: {priceItem, pictureItem},
         data() {
             return {
+                isUploadImg: false,
                 loading: false,
                 pictureVisible: false,
                 pictureTab: 'publist',
@@ -143,6 +156,7 @@
                 curImgUrl: '',
                 imageUrl: '',
                 form: {},
+                imgForm: {},
 
                 curPriceTem: {},
                 nextParams: {},
@@ -155,6 +169,11 @@
 
         },
         methods: {
+            onSuccess(res) {
+                this.curImgUrl = res.datas.url;
+                $(this.selectDom).attr('src', this.curImgUrl);
+
+            },
             priceTabChange() {
                 this.$refs[this.priceTab].initPic();
             },
@@ -290,16 +309,10 @@
                 this.loading = true;
                 let routeUrl = this.$router.resolve({
                     path: "/preview",
-                    query: {id: this.form.id}
+                    query: {str: $('#htmlDom').html()}
                 });
                 window.open(routeUrl.href, '_blank');
-
-               // this.$router.push('')
-                // let newwin= window.open('','', "");  //打开一个窗口并赋给变量newwin。
-                // newwin.opener = null; // 防止代码对论谈页面修改
-                // let html = $('#htmlDom').html();
-                // newwin.document.write(html);  //向这个打开的窗口中写入代码code，这样就实现了运行代码功能。
-                // newwin.document.close();
+                this.loading = false;
                 this.loading = false;
             },
             // 初始化
@@ -318,7 +331,17 @@
                let _this = this;
                 $('#htmlDom td').find('img').click(function () {
                     const img = $(this).attr('src');
-                    _this.curImgUrl = img;
+                    const noImg = require('../../assets/temp/temp-goods.png')
+                    _this.curImgUrl = img || noImg;
+                    if ($(this).data('property') === 'commodity') {
+                        _this.isUploadImg  = false
+                    } else {
+                        _this.isUploadImg  = true
+                    }
+                    _this.imgForm = {
+                        width: $(this).attr('width'),
+                        height: $(this).attr('height'),
+                    }
                     _this.selectDom = this;
                 });
             },
@@ -489,6 +512,7 @@
                         line-height: 32px;
                         border-bottom: 1px #ccc dashed;
                     }
+
                     .item{
                         display: flex;
                         justify-content: space-around;
@@ -511,6 +535,11 @@
                         margin-top: 10px;
                     }
 
+                }
+                .text{
+                    text-align: center;
+                    font-size: 14px;
+                    line-height: 32px;
                 }
             }
             .temp-html{

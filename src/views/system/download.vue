@@ -5,7 +5,7 @@
     </div>
 </template>
 <script>
-    import {myTempInfo, downloadImage} from '@/api/template/poster.js'
+    import {myTempInfo, downloadFile} from '@/api/template/poster.js'
     export default {
         data() {
             return {
@@ -22,7 +22,7 @@
         methods: {
             async init() {
                 let data = await myTempInfo({id: this.nextParams.id});
-                let datas = await downloadImage({id: this.nextParams.id});
+                let datas = await downloadFile({id: this.nextParams.id});
                 console.log(datas)
                 // window.close()
                 this.htmlDom = data.datas.htmlContent;

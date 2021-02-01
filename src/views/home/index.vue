@@ -13,22 +13,12 @@
             </el-form>
         </div>
         <div class="temp-con-content">
-            <div class="li-con" v-for="item in list" :key="item.id">
-                <div class="label-size">{{item.width}} * {{item.height}}</div>
-                <img src="../../assets/temp/temp-goods.png" />
-                <div class="li-option">
-                    <span class="li-option-title">{{item.name}}（{{new Date(item.timeCreate).format()}}）</span>
-                    <div class="li-option-btn">
-                        <el-button  type="primary" size="mini" icon="el-icon-thumb" @click="onUser(item)"></el-button>
-                        <el-button  type="info" size="mini" icon="el-icon-star-off" @click="onCollect(item)"></el-button>
-                    </div>
-                </div>
-                <div class="label-wrap">
-                    <div v-if="item.label">
-                        <el-tag size="mini" type="info" v-for="items in item.label.split(',')" :key="items">{{items}}</el-tag>
-                    </div>
-                </div>
-            </div>
+            <poster-item
+                    v-for="item in list"
+                    :key="item.id"
+                    @refresh="init"
+                    :info="item">
+            </poster-item>
         </div>
         <el-pagination
                 class="page-wrap"
@@ -46,11 +36,11 @@
     </div>
 </template>
 <script>
-    import { templateList,  } from '@/api/template/poster'
+    import { publishTemList,  } from '@/api/template/poster'
     import { getLabelList,  } from '@/api/system/label'
-    //templateUser
+    import posterItem from '@/components/poster'
     export default {
-        components:{  },
+        components:{ posterItem },
         data() {
             return {
                 dialogTempVisible: false,
@@ -115,7 +105,7 @@
             },
 
             async init() {
-                const res = await templateList(this.searchForm);
+                const res = await publishTemList(this.searchForm);
                 const labelRes = await getLabelList({isDetail: true});
                 console.log(labelRes, 'labelRes')
                 if (res.errcode === 0) {
@@ -125,7 +115,7 @@
         }
     }
 </script>
-<style lang="scss" >
+<style lang="scss">
     #home-wrap{
         .template-search-wrap{
             padding: 10px;
@@ -151,46 +141,23 @@
             }
 
         }
+        .poster-item-wrap{
+            width: 330px;
+            margin: 10px 10;
+            .li-con{
+                margin: 10px 0;
+                .temp-img{
+                    width: 308px;
+                }
+                .li-option-btn{
+                    width: 110px;
+                }
+            }
+        }
         .temp-con-content{
             display: flex;
             flex-wrap: wrap;
-            margin: 10px 10px 0 ;
-            .li-con{
-                border:1px solid #f1f1f1;
-                padding: 10px;
-                margin: 10px;
-                img {
-                    width: 340px;
-                }
-                .label-size{
-                    text-align: center;
-                    height: 24px;
-                    line-height: 24px;
-                    font-size: 14px;
-                    font-weight: bold;
-                    color: #42b983;
-                }
-                .label-wrap{
-                    margin-top: 5px;
-                    border-top: 1px solid #f9f9f9;
-                    padding-top: 5px;
-                    .el-tag{
-                        margin: 5px;
-                    }
-                }
-                .li-option{
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 10px;
-                    .li-option-title{
-                        font-size: 12px;
-                        line-height: 25px;
-                        .color-grap{
-                            color: #999999;
-                        }
-                    }
-                }
-            }
+            margin: 10px 0 0 ;
         }
         .page-wrap{
             width: 600px;

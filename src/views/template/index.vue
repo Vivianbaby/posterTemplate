@@ -1,5 +1,5 @@
 <template>
-    <div class="template-wrap">
+    <div id="tempHomeWrap">
        <div class="template-search-wrap">
            <el-form ref="form" :model="searchForm" label-width="100px">
                <el-form-item label="">
@@ -9,14 +9,14 @@
                <el-form-item v-if="curTagList.length">
                    <el-tag size="small" type="warning"  closable  @close="tagClose(item)" v-for="item in curTagList" :key="item" >{{item}}</el-tag>
                </el-form-item>
-               <el-form-item label="尺寸">
-                   <el-tag size="small" :effect="curTagList.includes(item) ? 'dark' : 'plain'" v-for="item in sizeList" :key="item" @click="tabClick(item, 'printSize')">{{item}}</el-tag>
+               <el-form-item label="尺寸"  v-if="sizeList.length">
+                   <el-tag size="small" :effect="curTagList.includes(item) ? 'dark' : 'plain'" v-for="item in sizeList" :key="item.id" @click="tabClick(item, 'printSize')">{{item.paramValue}}</el-tag>
                </el-form-item>
                <el-form-item label="日期">
                    <el-tag size="small"  :effect="curTagList.includes(item) ? 'dark' : 'plain'" v-for="item in dateList" :key="item" @click="tabClick(item, 'timeActivity')">{{item}}</el-tag>
                </el-form-item>
-               <el-form-item label="节日">
-                   <el-tag size="small" :effect="curTagList.includes(item) ? 'dark' : 'plain'" v-for="item in tagList" :key="item" @click="tabClick(item, 'label')" >{{item}}</el-tag>
+               <el-form-item label="节日" v-if="tagList.length">
+                   <el-tag size="small" :effect="curTagList.includes(item) ? 'dark' : 'plain'" v-for="item in tagList" :key="item.id" @click="tabClick(item, 'label')" >{{item.paramValue}}</el-tag>
                </el-form-item>
            </el-form>
        </div>
@@ -25,28 +25,9 @@
             <poster-item
                     v-for="item in list"
                     :key="item.id"
-                    :info="item"
-                    :isEdit="false">
+                    @refresh="init"
+                    :info="item">
             </poster-item>
-
-<!--            <div class="li-con" v-for="item in list" :key="item.id">-->
-<!--                <div class="label-size">{{item.width}} * {{item.height}}</div>-->
-<!--                <img src="../../assets/temp/temp-goods.png" />-->
-<!--                <div class="li-option">-->
-<!--                    <span class="li-option-title">{{item.name}}（{{new Date(item.timeCreate).format()}}）</span>-->
-<!--                    <div class="li-option-btn">-->
-<!--                        <el-button  type="primary" size="mini" icon="el-icon-thumb" @click="onUser(item)"></el-button>-->
-<!--                        <el-button v-if="item.favoriteId" type="warning" size="mini" icon="el-icon-star-off" @click="onCollect(item)"></el-button>-->
-<!--                        <el-button  v-else type="info" size="mini" icon="el-icon-star-off" @click="onCollect(item)"></el-button>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="label-wrap">-->
-<!--                    <div v-if="item.label">-->
-<!--                        <el-tag size="mini" type="info" v-for="items in item.label.split(',')" :key="items">{{items}}</el-tag>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
         <el-pagination
            class="page-wrap"
@@ -66,15 +47,16 @@
 <script>
     import { publishTemList  } from '@/api/template/poster'
     import posterItem from '@/components/poster'
+    import { getLabelList } from '@/api/system/label'
     export default {
         components:{posterItem  },
         data() {
             return {
                 dialogTempVisible: false,
                 list: [],
-                sizeList: ['16k', '8k', '4k', '16KBP', '16K16p','8k8p', '86lk'],
+                sizeList: [],
                 dateList: ['1月', '2月', '3月', '4月', '5月','6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                tagList: [ '蔬菜', '水果', '元旦', '超市','生活', '国庆','春节'],
+                tagList: [ ],
                 curTagList: [],
                 searchForm: {
                     label: null,
@@ -103,7 +85,8 @@
             pageCurrentChange() {
 
             },
-            tabClick(item, name) {
+            tabClick(data, name) {
+                const item = data.paramValue || data;
                 if (this.curTagList.includes(item)) {
                     const num = this.curTagList.indexOf(item);
                     this.curTagList.splice(num, 1);
@@ -125,6 +108,16 @@
             },
             async init() {
                 const res = await publishTemList(this.searchForm);
+                const labelRes = await getLabelList({isDetail: true});
+                const data = {festival: [], size: [], };
+                if(labelRes.datas && labelRes.datas.length) {
+                    labelRes.datas.forEach(item=> {
+                        data[item.paramKey] = (item.conditionScreeningDetailList)
+                    })
+                }
+                this.sizeList = data.size;
+                this.tagList = data.festival;
+
                 if (res.errcode === 0) {
                     this.list = res.datas;
                 }
@@ -133,7 +126,7 @@
     }
 </script>
 <style lang="scss" >
-    .template-wrap{
+    #tempHomeWrap{
         .template-search-wrap{
             padding: 10px;
             margin-top: 20px;
@@ -153,46 +146,24 @@
             }
 
         }
+        .poster-item-wrap{
+            width: 330px;
+            margin: 10px 10px;
+            .li-con{
+                margin: 10px 0;
+                .temp-img{
+                    width: 308px;
+                }
+                .li-option-btn{
+                    width: 110px;
+                }
+            }
+        }
         .temp-con-content{
             display: flex;
             flex-wrap: wrap;
-            margin: 10px 10px 0 ;
-            .li-con{
-                border:1px solid #f1f1f1;
-                padding: 10px;
-                margin: 10px;
-                img {
-                    width: 340px;
-                }
-                .label-size{
-                    text-align: center;
-                    height: 24px;
-                    line-height: 24px;
-                    font-size: 14px;
-                    font-weight: bold;
-                    color: #42b983;
-                }
-                .label-wrap{
-                    margin-top: 5px;
-                    border-top: 1px solid #f9f9f9;
-                    padding-top: 5px;
-                    .el-tag{
-                        margin: 5px;
-                    }
-                }
-                .li-option{
-                    display: flex;
-                    justify-content: space-between;
-                    margin-top: 10px;
-                    .li-option-title{
-                        font-size: 12px;
-                        line-height: 25px;
-                        .color-grap{
-                            color: #999999;
-                        }
-                    }
-                }
-            }
+            margin: 10px 0 0 ;
+
         }
         .page-wrap{
             width: 600px;

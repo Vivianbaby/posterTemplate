@@ -9,6 +9,14 @@ export function myTempList(data) {
     })
 }
 
+export function myTempUpdate(data) {
+    return request({
+        url: '/poster/update ',
+        method: 'POST',
+        data: data
+    })
+}
+
 export function templateAdd(data) {
     return request({
         url: '/makeTemplate/add ',
@@ -17,6 +25,7 @@ export function templateAdd(data) {
     })
 }
 
+
 export function templateUpdate(data) {
     return request({
         url: '/makeTemplate/update  ',
@@ -24,6 +33,7 @@ export function templateUpdate(data) {
         data: data
     })
 }
+
 export function templatePublish(query) {
     return request({
         url: '/makeTemplate/publish',

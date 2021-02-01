@@ -4,7 +4,7 @@
             <div class="btn-left">
                 <el-button v-if="!info.id" type="primary" size="small" icon="el-icon-plus" @click="newCanvas">新建</el-button>
             </div>
-            <div class="btn-right">
+            <div class="btn-right"  v-if="isCanvas">
                 <el-button type="primary" size="small" @click="onSave(false)">保存</el-button>
                 <el-button type="default" size="small" @click="onPreview">预览</el-button>
                 <el-button type="warning" size="small" @click="onPublic">发布</el-button>
@@ -114,8 +114,11 @@
                 </div>
             </div>
         </div>
-        <el-dialog title="新建价格模板" :visible.sync="markVisible"  width="450px">
-            <el-form :model="form"  ref="ruleForm" label-width="60px" class="demo-ruleForm">
+        <el-dialog title="新建价格模板"
+                   :close-on-click-modal="false"
+                   :close-on-press-escape ="false"
+                   :visible.sync="markVisible"  width="450px">
+            <el-form :model="form" :rules="formRules" ref="ruleForm" label-width="60px" class="demo-ruleForm">
                 <el-form-item label="名称" prop="name">
                     <el-input  v-model="form.name" autocomplete="off"></el-input>
                 </el-form-item>
@@ -123,7 +126,7 @@
                     <el-input v-model.number="form.width"></el-input>
                 </el-form-item>
                 <el-form-item label="高度" prop="height">
-                    <el-input v-model="form.height" autocomplete="off"></el-input>
+                    <el-input v-model.number="form.height" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">确定</el-button>
@@ -132,7 +135,10 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog title="价格模板预览" :visible.sync="previewVisible"  :width = "+form.width + 200 +'px'" :height="+form.height + 200 + 'px'">
+        <el-dialog title="价格模板预览"
+                   :close-on-click-modal="false"
+                   :close-on-press-escape ="false"
+                   :visible.sync="previewVisible"  :width = "+form.width + 200 +'px'" :height="+form.height + 200 + 'px'" class="preview-dialog">
             <div id="previewCanvas" style="border:1px solid #f9f9f9">
 
             </div>
@@ -180,6 +186,17 @@
                     width: '',
                     height: '',
                 },
+                formRules: {
+                    name: [
+                        { required: true, message: '请输入名称', trigger: 'blur' },
+                    ],
+                    width: [
+                        { required: true, message: '请输入数字', trigger: 'blur' },
+                    ],
+                    height: [
+                        { type: 'number', required: true, message: '请输入数字', trigger: 'blur' },
+                    ],
+                },
                 formAttr: {
                     fontSize: '12',      // 设置字体的大小
                     fontColor: '',     // 设置字体的颜色
@@ -207,7 +224,7 @@
         methods: {
             // 发布
             onPublic() {
-                this.$confirm('是否确认发布？发布后价格模板不能进行修改！', '提示', {
+                this.$confirm('请确认模板设置，发布后不能进行修改和删除，是否继续？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -236,8 +253,9 @@
                         res = await  priceUpdate(this.form);
                     } else {
                         res = await  priceAdd(this.form);
-                        this.form.id = res.datas.data;
+                        this.form.id = res.datas;
                     }
+
                     if (state) {
                         res = await  pricePublish({id: this.form.id});
                     }
@@ -436,8 +454,12 @@
             },
             // dialog保存
             onSubmit() {
-                this.isCanvas = true;
-                this.markVisible = false;
+                this.$refs['ruleForm'].validate((valid) => {
+                    if (valid) {
+                        this.isCanvas = true;
+                        this.markVisible = false;
+                    }
+                })
             },
             // dialog重置
             onReset() {
@@ -471,6 +493,11 @@
 
         .el-upload-list{
             height: 32px;
+        }
+        .preview-dialog .el-dialog__body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
     .temp-con{

@@ -1,6 +1,7 @@
 <template>
     <div id="posterWrap"  v-loading="loading">
         <div class="temp-btn" >
+            <el-button type="primary" size="small"  style="float: left" @click="$router.back()">返回</el-button>
             <el-button type="primary" size="small" @click="onSave(false)">保存</el-button>
             <el-button type="default" size="small" @click="onPreview">预览</el-button>
             <el-button type="warning" size="small" @click="onPublish">发布</el-button>
@@ -26,14 +27,19 @@
                            {{form.width}}*{{form.height}}
                         </el-form-item>
                         <el-form-item label="印刷尺寸">
-                            <el-input v-model="form.printSize" size="small">
-                                <template slot="append">k</template>
-                            </el-input>
+                            <el-select v-model="form.printSize"  placeholder="请选择" style="width: 100%" size="small">
+                                <el-option label="大16K" value="大16K"></el-option>
+                                <el-option label="8K" value="8K"></el-option>
+                                <el-option label="4K" value="4K"></el-option>
+                                <el-option label="16K8P" value="16K8P"></el-option>
+                                <el-option label="16K16P" value="16K16P"></el-option>
+                                <el-option label="8K8P" value="8K8P"></el-option>
+                            </el-select>
                         </el-form-item>
                         <el-form-item label="海报名称">
                             <el-input v-model="form.name" size="small"></el-input>
                         </el-form-item>
-                        <el-form-item label="日期">
+                        <el-form-item label="活动日期">
                             <el-date-picker
                                     size="small"
                                     style="width: 100% "
@@ -152,7 +158,8 @@
                 html: '',       // 从后台返回的html代码
                 zoom: '20',
                 curImgUrl: '',
-                form: {},
+                form: {
+                },
                 type: '',
                 curPriceTem: {},
                 nextParams: {},
@@ -186,6 +193,7 @@
             async onSave(state) {
                 this.loading = true;
                 if (state) {
+                    $('#htmlDom').find('td').removeClass('.temp-tag');
                     this.showTemplate();
                 } else {
                     $('#htmlDom').find('.temp-price').remove();
@@ -215,9 +223,10 @@
                     } else {
                         const params = Object.assign({}, this.form, {psTemplateId: this.nextParams.id})
                         res = await templateAdd(params);
-                        this.form.id = res.datas.data;
-                        this.form.bgUrl = `/api${res.datas.bjHexUrl}`;
+                        this.form.id = res.datas;
+                        console.log('看到的this', this.form)
                     }
+                    console.log('稍等', this.form)
                     if (state) {
                         res =  await templatePublish({id: this.form.id});
                     }
@@ -227,7 +236,7 @@
                             message: '操作成功！',
                             type: 'success'
                         });
-                        this.$router.back();
+                        if (state) this.$router.back();
                         if (!state && this.isNext){
                             this.showTemplate()
                         }
@@ -259,7 +268,7 @@
                 }
                 const _this = this;
                 $('#htmlDom').find('img').each(function(e, index) {
-                    const data = $(this).data("property");
+                    const data = $(this).attr('data-property');
                     if (data === 'commodity') {
                         const str = _this.curPriceTem.style;
                         if ($(this).siblings().attr('class') === 'temp-price'){
@@ -268,12 +277,21 @@
                             $(this).after('<div style="position:absolute;z-index: 6;right:10px;bottom:10px" class="temp-price">' + _this.curPriceTem.style + '</div> ');
                         }
                     }
+
                 });
             },
             // 发布
-            async onPublish() {
-                this.loading = true;
-                this.onSave(true)
+            onPublish() {
+                this.$confirm('此操作将不能进行删除和修改, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    this.onSave(true)
+                }).catch(() => {
+                    this.loading = false;
+                });
+
             },
             // 初始化
             async init() {
@@ -285,7 +303,7 @@
                 } else {
                     data =  await templateUploadInfo({templateId: this.nextParams.id});
                     this.html = data.datas.htmlContent;
-                    this.form.bgUrl = `/api${data.datas.bjHexUrl}`;
+                    this.form.bgUrl = `${this.$api}${data.datas.bjHexUrl}`;
                 }
 
                 this.$nextTick(()=> {
@@ -364,7 +382,7 @@
 
                 }
                 $('#htmlDom').find('img').each(function (index, e) {
-                   const data = $(e).attr('data-property');
+                   const data = $(e).data('property');
                    if (data){
                         obj[data]++
                    }
@@ -413,9 +431,11 @@
 <style lang="scss">
     #posterWrap{
         margin-top: 20px;
+
         .temp-btn{
             text-align: right;
         }
+
         .temp-con{
             display: flex;
             justify-content: space-between;

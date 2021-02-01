@@ -5,8 +5,8 @@
         </div>
         <div class="temp-con-right">
             <div class="temp-btn">
-                <el-button type="primary" @click="uploadTemp">
-                 设计模板
+                <el-button type="primary" @click="uploadTemp" size="small">
+                 设计模板 <i class="el-icon-thumb"></i>
                 </el-button>
             </div>
             <div class="temp-con-wrap">

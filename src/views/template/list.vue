@@ -1,18 +1,19 @@
 <template>
-    <div class="temp-con">
+    <div class="temp-con" id="tempListWrap">
         <div class="temp-con-asider">
             <left-menu></left-menu>
         </div>
         <div class="temp-con-right">
             <div class="temp-btn">
-                <el-button type="primary" @click="uploadTemp">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+                <el-button type="primary" @click="uploadTemp" size="small">上传<i class="el-icon-upload el-icon--right"></i></el-button>
             </div>
             <div class="temp-con-content">
                 <poster-item
+                        @refresh="init"
                         v-for="item in list"
                         :key="item.id"
                         :info="item"
-                        :isEdit="true">
+                        posterType="posterList">
                 </poster-item>
             </div>
         </div>
@@ -36,6 +37,7 @@
     import { templateList } from '@/api/template/poster'
     import leftMenu from '@/components/left-menu'
     import posterItem from '@/components/poster'
+
     export default {
         components:{ leftMenu, posterItem },
         data() {
@@ -65,6 +67,8 @@
             },
             async init() {
                 const res = await templateList(this.searchForm);
+
+
                 if (res.errcode === 0) {
                     this.list = res.datas;
                 }
@@ -73,7 +77,7 @@
     }
 </script>
 <style lang="scss" scoped>
-    .temp-con{
+    #tempListWrap{
         display: flex;
         .temp-con-asider{
             width: 220px;
@@ -87,14 +91,28 @@
         }
         .temp-con-right{
             flex:1;
+            margin-left: 20px;
             .temp-btn{
-                margin: 20px;
+                margin: 20px 10px;
                 margin-bottom: 0;
+            }
+        }
+        .poster-item-wrap{
+            margin: 10px 0px 0;
+            .li-con{
+                margin: 10px 0;
+                .temp-img{
+                    width: 308px;
+                }
+                .li-option-btn{
+                    width: 110px;
+                }
             }
         }
         .temp-con-content{
             display: flex;
             flex-wrap: wrap;
+            margin: 10px 0 0 ;
         }
     }
 </style>

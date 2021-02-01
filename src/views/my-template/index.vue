@@ -5,26 +5,24 @@
         </div>
         <div class="temp-con-right">
             <div class="temp-con-content">
-                <div class="li-con" v-for="item in list" :key="item.id">
-                    <img src="../../assets/temp/temp-goods.png" />
-                    <div class="li-option">
-                        <span class="li-option-title">{{item.name}}（{{new Date(item.timeCreate).format()}}）</span>
-                        <div class="li-option-btn">
-                            <el-button v-if="!item.finalize" type="primary" size="mini" icon="el-icon-edit" @click="onEdit(item)"></el-button>
-                            <el-button v-else type="warning" size="mini" icon="el-icon-download" @click="onDelete(item)"></el-button>
-                            <el-button v-if="!item.finalize" type="warning" size="mini" icon="el-icon-delete" @click="onDelete(item)"></el-button>
-                        </div>
-                    </div>
-                </div>
+                <poster-item
+                        @refresh="init"
+                        v-for="item in list"
+                        :key="item.id"
+                        :info="item"
+                        posterType="myTemList">
+                </poster-item>
             </div>
+
         </div>
     </div>
 </template>
 <script>
-    import { myTempList, templateUpdate } from '@/api/my-template/index'
+    import { myTempList, myTempUpdate } from '@/api/my-template/index'
+    import posterItem from '@/components/poster'
     import leftMenu from '@/components/left-menu'
     export default {
-        components:{ leftMenu },
+        components:{ leftMenu, posterItem },
         data() {
             return {
                 list: [],
@@ -34,14 +32,20 @@
             this.init();
         },
         methods: {
+            async onDownload() {
+                // const res = await downloadFile({htmlCode:'123'});
 
+                let routeUrl = '/api/downloadImageByCode?htmlCode=123'
+                window.open(routeUrl, '_blank');
+
+            },
             onEdit(item) {
                 item.postType = 'info';
                 this.$router.push({path: '/template/user', query: {...item}})
             },
             async onDelete(item) {
                 item.disabled = true;
-                const res = await templateUpdate(item);
+                const res = await myTempUpdate(item);
                 if (res.errcode === 0) {
                     this.$message({
                         message: '操作成功',
@@ -78,6 +82,11 @@
                 margin: 20px;
                 margin-bottom: 0;
             }
+        }
+        .temp-con-content{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 10px 0 0 ;
         }
         .temp-con-content{
             display: flex;

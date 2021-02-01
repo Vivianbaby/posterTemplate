@@ -95,10 +95,17 @@ export function uploadInfo(query) {
     })
 }
 
-export function downloadFile(query) {
+export function downloadAdd(datas) {
     return request({
-        url: '/downloadImage',
-        method: 'get',
-        params: query
+        url: '/download/add',
+        method: 'POST',
+        data: datas
+    })
+}
+export function downloadFile(params) {
+    return request({
+        url: '/downloadImageById',
+        method: 'GET',
+        params: params
     })
 }
