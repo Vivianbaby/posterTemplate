@@ -17,7 +17,7 @@
             <div class="temp-con-wrap" v-loading="loading">
                 <div class="item-wrap" v-for="item in list" :key="item.id">
                     <div class="item-wrap-img">
-                        <img :src="item.productImgUrl"/>
+                        <img :src=" $baseApi + item.productImgUrl"/>
                     </div>
                     <div class="item-wrap-info">
                         <div class="info-option">
@@ -49,56 +49,14 @@
             </el-pagination>
         </div>
 
-
-        <el-dialog title="上传本地图片"  :close-on-click-modal="false"  :visible.sync="addVisible"  width="500px">
-            <el-form :model="form"  ref="ruleForm" label-width="85px" class="dialog-form" size="small">
-                <el-form-item label="商品名称" prop="productName">
-                    <el-input  v-model="form.productName" autocomplete="off" placeholder="请输入商品名称"></el-input>
-                </el-form-item>
-                <el-form-item label="商品条码" prop="productBarCode">
-                    <el-input v-model="form.productBarCode" placeholder="请输入商品条码"></el-input>
-                </el-form-item>
-                <el-form-item label="商品类目" prop="productType">
-                    <el-select v-model="form.productType" placeholder="请选择" style="width: 100%">
-                        <el-option
-                                v-for="item in typeList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="商品类目" prop="imageUrl" >
-                    <el-upload
-                            class="avatar-uploader"
-                            action="/api/file/upload"
-                            :show-file-list="false"
-                            :on-success="uploadSuccess"
-                           >
-                        <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="商品标签" prop="labelStr">
-                    <el-input v-model="form.labelStr" autocomplete="off" placeholder="请输入回车添加标签" @keyup.enter.native="onAddLable"></el-input>
-                    <el-tag closable @close="closeTag(item)" v-for="(item,index) in labelList" :key="index">{{item}}</el-tag>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onFormSave">确定</el-button>
-                    <el-button @click="onFormReset">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
-
-
     </div>
 </template>
 <script>
-    import {pictureList, pictureUpdate, pictureAdd, pictureInfo} from '@/api/my-picture/index'
+    import {commonList} from '@/api/my-picture/index'
     import { collectOrCancel } from '@/api/collect/index'
 
     export default {
-        components:{  },
+        components:{},
         data() {
             return {
                 loading: false,
@@ -109,17 +67,6 @@
                     pageNum: 1,
                 },
                 tyleTagList:['全部'],
-                form: {
-                    productName: '',
-                    productCode: '',
-                    productType: '',
-                    productLabel: '',
-                    labelStr: '',
-                    productImgUrl: '',
-                    imageUrl: '',
-
-                },
-                addVisible: false,
                 labelList:[],
                 typeList: [
                     {label: '酒水饮料', value: '酒水饮料'},
@@ -128,10 +75,11 @@
                 ],
                 pagination: {
                     total: 0,
-                }
+                },
             }
         },
         mounted() {
+
             this.init()
         },
         methods: {
@@ -165,88 +113,17 @@
             onSearch () {
 
             },
-            uploadSuccess(response) {
-                this.form = Object.assign({}, this.form,{imageUrl: response.datas.url, productImgUrl: response.datas.url})
-            },
-            async onFormSave() {
-                this.form.productLabel = this.labelList.join(',');
-                if (this.form.id) {
-                    await pictureUpdate(this.form);
-                } else {
-                    await pictureAdd(this.form);
-                }
 
-                this.init();
-                this.$message({
-                    message: '操作成功！',
-                    type:'success'
-                });
-                this.addVisible = false;
-            },
+
             onFormReset() {
                 this.$refs['ruleForm'].resetFields();
                 this.labelList = [];
                 this.form.productImgUrl = '';
             },
-            // 添加标签
-            onAddLable() {
-                if (this.labelList.length > 5) {
-                    this.$message('标签数量不能超过6个');
-                    return false;
-                }
-                if (this.labelList.includes(this.form.labelStr)) {
-                    return false;
-                }
-                this.labelList.push(this.form.labelStr)
-                this.form.labelStr = '';
-            },
-            // 删除标签
-            closeTag(item) {
-                const num = this.labelList.indexOf(item);
-                if (num !== -1) {
-                    this.labelList.splice(num , 1)
-                }
-            },
-            uploadTemp() {
-                this.addVisible = true;
-                 this.$nextTick(()=>{
-                     this.form = {}
-                     this.onFormReset();
-                 })
-            },
-            async onEdit(items) {
-                this.addVisible = true;
-                const res = await pictureInfo({id: items.id});
-                const item = res.datas;
-
-                this.$nextTick(() => {
-                    this.form = JSON.parse(JSON.stringify(item));
-                    this.form.imageUrl = item.productImgUrl;
-                    this.labelList = this.form.productLabel ?  this.form.productLabel.split(',')  : [];
-                })
-
-            },
-            onDelete(item) {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                }).then(async () => {
-                    item.disabled = true;
-                    await pictureUpdate(item);
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    });
-                    this.init();
-                }).catch(() => {
-
-                });
-            },
 
             async init() {
                 this.loading = true;
-                const res = await pictureList(this.searchForm);
+                const res = await commonList(this.searchForm);
                 this.list = res.datas;
                 this.pagination.total = res.total;
                 this.loading = false;

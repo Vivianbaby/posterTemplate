@@ -27,6 +27,7 @@
                 </div>
 
                 <div class="li-option-btn"  v-else>
+
                     <el-button type="primary" size="mini" icon="el-icon-thumb" @click="onUser(info)"></el-button>
                     <el-button v-if="info.favoriteId" type="warning" size="mini" icon="el-icon-star-off"
                                @click="onCollect(info)"></el-button>
@@ -102,12 +103,15 @@
                     id: item.favoriteId,
                     type: 'template'
                 };
-                await collectOrCancel(params);
-                this.$message({
-                    type: 'success',
-                    message: '操作成功'
-                });
-                this.$emit('refresh')
+                const res= await collectOrCancel(params);
+                if(res) {
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功'
+                    });
+                    this.$emit('refresh')
+                }
+
             },
             onEdit(item) {
                 item.postType = 'info';
@@ -117,7 +121,7 @@
                 const str = ' <link rel="stylesheet" type="text/css" href="http://192.168.0.166:10087/static/file/Font/font.css">' + item.htmlContent
                 const res = await downloadAdd({templateId: item.id, htmlContent: str});
 
-                let routeUrl = `/api/downloadImageById?id=${res.datas}`
+                let routeUrl = `${this.$baseApi}/downloadImageById?id=${res.datas}`
                 window.open(routeUrl, '_blank');
 
             },
@@ -199,7 +203,8 @@
 
             .temp-img {
                 width: 340px;
-
+                height: 240px;
+                overflow: hidden;
                 img {
                     width: 100%;
                 }

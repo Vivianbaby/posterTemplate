@@ -10,10 +10,11 @@ import './utils/prototype'
 
 
 Vue.config.productionTip = false
-Vue.prototype.$uploadApi = "/api/file/upload";
+Vue.prototype.$uploadApi = process.env.VUE_APP_BASE_API + "/file/upload";
 Vue.prototype.$api = "http://192.168.0.166:10087/";
+Vue.prototype.$baseApi = process.env.VUE_APP_BASE_API;
 
-
+console.log(process)
 Vue.use(ElementUI);
 new Vue({
   render: h => h(App),

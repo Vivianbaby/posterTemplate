@@ -8,24 +8,24 @@
             <span>我的海报</span>
         </el-menu-item>
         <el-menu-item index="/template/list">
-            <i class="el-icon-menu"></i>
+            <i class="el-icon-film"></i>
             <span>我的海报模板</span>
         </el-menu-item>
         <el-menu-item index="/price/list">
-            <i class="el-icon-document"></i>
+            <i class="el-icon-collection-tag"></i>
             <span>我的价格模板</span>
         </el-menu-item>
         <el-menu-item index="/picture/list">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-mobile"></i>
             <span slot="title">我的图库</span>
         </el-menu-item>
         <el-menu-item index="/collect">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-folder-add"></i>
             <span slot="title">我的收藏</span>
         </el-menu-item>
         <div class="line"></div>
         <el-menu-item index="/info">
-            <i class="el-icon-setting"></i>
+            <i class="el-icon-s-custom"></i>
             <span slot="title">我的信息</span>
         </el-menu-item>
 <!--        <el-menu-item index="/account">-->

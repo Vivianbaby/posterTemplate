@@ -120,7 +120,7 @@
         .template-search-wrap{
             padding: 10px;
             margin-top: 20px;
-            background: url("../../assets/banner.jpg") no-repeat center top;
+            background: url("../../assets/banner.png") no-repeat center top;
             height: 150px;
             .el-form{
                 margin-left: 300px;

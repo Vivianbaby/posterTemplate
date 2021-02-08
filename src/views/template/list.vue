@@ -16,13 +16,24 @@
                         posterType="posterList">
                 </poster-item>
             </div>
+            <el-pagination
+                    class="page-wrap"
+                    background
+                    @size-change="pageSizeChange"
+                    @current-change="pageCurrentChange"
+                    :current-page="searchForm.pageNum"
+                    :page-sizes="[1,5, 10, 20]"
+                    :page-size="searchForm.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pagination.total">
+            </el-pagination>
         </div>
         <el-dialog title="上传模板" :visible.sync="dialogTempVisible"  width="400px">
             <div style="height: 230px; overflow:hidden;">
                 <el-upload
                         class="upload-demo"
                         drag
-                        action="/api/file/upload?psd=true"
+                        :action="$baseApi + '/file/upload?psd=true'"
                         :on-success	= "uploadSucess"
                         multiple>
                     <i class="el-icon-upload"></i>
@@ -49,14 +60,23 @@
                     timeActivity: '',
                     printSize: '',
                     pageNum: 1,
-                    pageSize: 10
+                    pageSize: 6
                 },
+                pagination: {
+                    total: 0,
+                }
             }
         },
         mounted() {
             this.init();
         },
         methods: {
+            pageSizeChange() {
+
+            },
+            pageCurrentChange() {
+
+            },
 
             uploadTemp() {
                 this.dialogTempVisible = true
@@ -103,6 +123,8 @@
                 margin: 10px 0;
                 .temp-img{
                     width: 308px;
+                    height: 240px;
+                    overflow: hidden;
                 }
                 .li-option-btn{
                     width: 110px;
@@ -113,6 +135,13 @@
             display: flex;
             flex-wrap: wrap;
             margin: 10px 0 0 ;
+            min-height: 750px;
         }
+        .page-wrap{
+            width: 600px;
+            margin: 30px auto 30px auto;
+            text-align: center;
+        }
+
     }
 </style>

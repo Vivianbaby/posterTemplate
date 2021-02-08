@@ -22,7 +22,6 @@
                 @click.native="selectOption(item)"
             ></picture-item>
         </div>
-
         <el-pagination
                 class="page-wrap"
                 background
@@ -33,11 +32,11 @@
                 :page-size="searchForm.pageSize"
                 :total="curPicList.total">
         </el-pagination>
-
     </div>
 </template>
 <script>
     import {pictureList} from '@/api/my-picture/index'
+    import {commonList} from '@/api/my-picture/index'
     import pictureItem from './pictrue'
     export default {
         name: 'picture',
@@ -113,7 +112,7 @@
                             isPublish: true
                         };
                     }
-                    res =  await pictureList(params);
+                    res =  await commonList(params);
                 }
                 this.curPicList = {
                     list: res.datas,
@@ -131,7 +130,7 @@
         overflow: hidden;
     }
     .pic-container{
-        min-height: 400px;
+        min-height: 540px;
         display: flex;
         flex-wrap: wrap;
     }

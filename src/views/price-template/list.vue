@@ -33,6 +33,16 @@
                     </div>
                 </div>
             </div>
+            <el-pagination
+                    class="page-wrap"
+                    background
+                    @size-change="pageSizeChange"
+                    @current-change="pageCurrentChange"
+                    :current-page="searchForm.pageNum"
+                    :page-sizes="[1,5, 10, 20]"
+                    :page-size="searchForm.pageSize"
+                    :total="pagination.total">
+            </el-pagination>
 
         </div>
 
@@ -47,12 +57,30 @@
         data() {
             return {
                 list: [],
+                searchForm: {
+                    pageNum: 1,
+                    pageSize: 15,
+                    total: 0,
+                },
+                pagination: {
+                    total: 0,
+                 }
             }
         },
         mounted() {
           this.init()
         },
         methods: {
+            pageSizeChange(e) {
+                this.searchForm.pageSize = e;
+                console.log(this.searchForm)
+                this.init();
+            },
+            pageCurrentChange(e) {
+                this.searchForm.pageNum = e;
+                console.log(this.searchForm)
+                this.init();
+            },
             handleOpen() {
 
             },
@@ -106,9 +134,10 @@
             },
 
             async init() {
-                const res = await myPriceList({});
+                const res = await myPriceList(this.searchForm);
                 if (res.errcode === 0) {
                     this.list = res.datas;
+                    this.pagination.total = res.total;
                 }
             }
         }
@@ -136,18 +165,21 @@
             display: flex;
             flex-wrap: wrap;
             margin: 10px 10px 0 ;
+            min-height: 500px;
             .item-wrap{
                 border:1px solid #f1f1f1;
                 padding: 10px;
                 margin: 10px;
+                height: 245px;
                 .item-wrap-img{
                     display: flex;
                     align-items: center;
+                    justify-content: center;
                     width: 220px;
                     height: 180px;
                     overflow: hidden;
                     img {
-                        width: 100%;
+                        width: 80%;
                     }
                 }
                 .item-wrap-info{
@@ -165,6 +197,11 @@
                     }
                 }
             }
+        }
+        .page-wrap{
+            width: 600px;
+            margin: 30px auto 30px auto;
+            text-align: center;
         }
     }
 </style>

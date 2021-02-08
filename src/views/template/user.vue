@@ -45,7 +45,7 @@
                     </div>
                     <div  v-if="curImgUrl">
                         <div class="title">更换产品</div>
-                        <div class="text">{{imgForm.width}}*{{imgForm.height}}</div>
+                        <div class="text">{{imgForm.width}}*{{imgForm.height}}<span style="color: #f00" v-if="imgForm.property"> ( {{markObj[imgForm.property]}} ) </span> </div>
                         <div class="img">
                             <img :src="curImgUrl" />
                         </div>
@@ -61,7 +61,7 @@
                                 <el-button size="small" type="primary">点击上传</el-button>
                                 <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                             </el-upload>
-                            <el-button  v-if="!isUploadImg"  type="primary">确定</el-button>
+<!--                            <el-button  v-if="!isUploadImg"  type="primary">确定</el-button>-->
 
                         </div>
                     </div>
@@ -90,7 +90,7 @@
         <el-dialog title="商品图库"  :close-on-click-modal="false" :close-on-press-escape ="false" :visible.sync="pictureVisible"  width="800px" height="600px">
             <el-tabs v-model="pictureTab" type="card"  @tab-click="picTabChange">
                 <el-tab-pane label="在线图库" name="publist">
-                    <picture-item   ref="publist"  @onSelectImg="onSelectImg" :isBtn="true" typeKey="publish"></picture-item>
+                    <picture-item ref="publist"  @onSelectImg="onSelectImg" :isBtn="true" typeKey="publish"></picture-item>
                 </el-tab-pane>
                 <el-tab-pane label="我的图库" name="myTem">
                     <picture-item   ref="myTem"  @onSelectImg="onSelectImg" :isBtn="true" typeKey="myTem"></picture-item>
@@ -118,6 +118,8 @@
     /* eslint-disable no-unused-vars */
     import $ from 'jquery'
     import {myTempInfo,myTempUpdate, myTempFinalize,uploadInfo} from '@/api/template/poster.js'
+
+
     import {priceList} from '@/api/price-template/index'
 
     import priceItem from '@/components/price-item'
@@ -150,11 +152,18 @@
                     {key: 'time', name: '时间底图', num: 0},
                     {key: 'other', name: '其他图', num: 0},
                 ],
-
+                markObj: {
+                    logo: 'Logo图',
+                    theme: '主题图',
+                    commodity: '商品',
+                    qrCode: '二维码底图',
+                    address: '地址底图',
+                    time: '时间底图',
+                    other: '其他图',
+                },
                 html: '',     // 从后台返回的html代码
                 zoom: '20',
                 curImgUrl: '',
-                imageUrl: '',
                 form: {},
                 imgForm: {},
 
@@ -165,7 +174,6 @@
         mounted() {
            this.nextParams = this.$route.query;
            this.init();
-
 
         },
         methods: {
@@ -201,7 +209,7 @@
             },
 
             // 商品信息回显到dom节点上
-            initHtml() {
+            initHtml(isChangeImg) {
                 const data = this.itemInfoList;
                 let num = 0;
 
@@ -216,7 +224,7 @@
                         }
 
 
-                        $(item).find('img').attr('src', curData.imgUrl)
+                        if (!isChangeImg) $(item).find('img').attr('src', curData.imgUrl)
 
 
                         $(priceDom).find('div').each((index, items) => {
@@ -277,22 +285,23 @@
             onSelectImg(item) {
                 if (item.selectType === 'picture') {
                     this.pictureVisible = false;
-                    this.imageUrl = item.productImgUrl;
-                    $(this.selectDom).attr('src', item.productImgUrl);
+                    this.curImgUrl = this.$baseApi + item.productImgUrl;
+                    $(this.selectDom).attr('src', this.curImgUrl);
                 } else {
                     this.priceDialogVisible = false;
                     this.curPriceTem = item;
-                    console.log('选择的价格模板', this.curPriceTem)
                     this.showTemplate();
-                    this.initHtml()
+                    this.initHtml(true)
                 }
             },
             priceTempChange(item) {
                 this.curPriceList.forEach(items => {
                     if (items.id === this.form.makeTemplateId) {
                         this.curPriceTem = items;
+                        console.log(this.itemInfoList);
+
                         this.showTemplate();
-                        this.initHtml()
+                        this.initHtml(true)
                     }
                 })
             },
@@ -302,7 +311,7 @@
             },
             // 下载模板
             onDownload() {
-                window.open("/api/excel/download");
+                window.open(this.$baseApi + "/excel/download");
             },
             // 预览
             onPreview() {
@@ -320,7 +329,7 @@
                 let data = await myTempInfo({id: this.nextParams.id});
                 this.html = data.datas.htmlContent;
                 this.form = data.datas;
-                this.uploadApi = `/api/excel/upload?makeTemplateId=${this.form.id}`;
+                this.uploadApi = `${this.$baseApi}/excel/upload?makeTemplateId=${this.form.id}`;
                 this.$nextTick(()=> {
                    this.initDom();
                     this.getNumber();
@@ -341,6 +350,7 @@
                     _this.imgForm = {
                         width: $(this).attr('width'),
                         height: $(this).attr('height'),
+                        property: $(this).data('property'),
                     }
                     _this.selectDom = this;
                 });
@@ -395,6 +405,9 @@
         margin-top: 20px;
         .temp-btn{
             text-align: right;
+        }
+        .picture-item-wrap{
+            height: 240px;
         }
         .temp-con{
             display: flex;

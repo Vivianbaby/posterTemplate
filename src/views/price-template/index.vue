@@ -193,12 +193,13 @@
                 margin: 10px 19px 0 19px;
                 .item-wrap-img{
                     display: flex;
+                    justify-content: center;
                     align-items: center;
                     width: 220px;
                     height: 180px;
                     overflow: hidden;
                     img {
-                        width: 100%;
+                        width: 80%;
                     }
                 }
                 .item-wrap-info{
@@ -223,10 +224,10 @@
                 }
             }
         }
-        .page-wrap{
-            width: 600px;
-            margin: 50px auto 50px auto;
-            text-align: center;
-        }
+       .page-wrap{
+           width: 600px;
+           margin: 30px auto 30px auto;
+           text-align: center;
+       }
     }
 </style>

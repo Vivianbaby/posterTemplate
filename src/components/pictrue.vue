@@ -1,7 +1,7 @@
 <template>
     <div class="picture-item-wrap">
         <div class="item-wrap-img">
-            <img :src="info.productImgUrl" />
+            <img :src="$baseApi + info.productImgUrl" />
         </div>
         <div v-if="type === 'item'" class="item-wrap-title" :class="[active, 'item-wrap-title']">
             {{info.productName}}
@@ -64,7 +64,7 @@
 <style lang="scss" scoped>
     .picture-item-wrap{
         width: 230px;
-        height: 270px;
+        max-height: 270px;
         margin:10px 10px  10px 0;
         border:1px solid #f1f1f1;
         padding: 5px;

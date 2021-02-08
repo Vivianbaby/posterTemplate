@@ -2,7 +2,10 @@
     <div id="priceAddWrap">
         <div class="temp-btn">
             <div class="btn-left">
+                <el-button type="primary" size="small"   @click="$router.back()">返回</el-button>
+
                 <el-button v-if="!info.id" type="primary" size="small" icon="el-icon-plus" @click="newCanvas">新建</el-button>
+
             </div>
             <div class="btn-right"  v-if="isCanvas">
                 <el-button type="primary" size="small" @click="onSave(false)">保存</el-button>
@@ -56,7 +59,7 @@
                         <div class="text">画布大小： {{form.width}}*{{form.height}}px</div>
                         <el-upload
                                 class="upload-demo"
-                                action="/api/file/upload"
+                                :action="$uploadApi"
                                 multiple
                                 :limit="1"
                                 :on-success	= "uploadSucess"

@@ -13,6 +13,17 @@
                         posterType="myTemList">
                 </poster-item>
             </div>
+            <el-pagination
+                    class="page-wrap"
+                    background
+                    @size-change="pageSizeChange"
+                    @current-change="pageCurrentChange"
+                    :current-page="searchForm.pageNum"
+                    :page-sizes="[1,5, 10, 20]"
+                    :page-size="searchForm.pageSize"
+                    :total="pagination.total">
+            </el-pagination>
+
 
         </div>
     </div>
@@ -26,12 +37,27 @@
         data() {
             return {
                 list: [],
+                searchForm: {
+                    pageNum: 1,
+                    pageSize: 6
+                },
+                pagination: {
+                    total: 0,
+                }
             }
         },
         mounted() {
             this.init();
         },
         methods: {
+            pageSizeChange(e) {
+                this.searchForm.pageSize =e ;
+                this.init();
+            },
+            pageCurrentChange(e) {
+                this.searchForm.pageNum =e ;
+                this.init();
+            },
             async onDownload() {
                 // const res = await downloadFile({htmlCode:'123'});
 
@@ -55,9 +81,10 @@
                 }
             },
             async init() {
-                const res = await myTempList({});
+                const res = await myTempList(this.searchForm);
                 if (res.errcode === 0) {
                     this.list = res.datas;
+                    this.pagination.total = res.total;
                 }
             }
         }
@@ -76,6 +103,11 @@
 
 
         }
+        .page-wrap{
+            width: 600px;
+            margin: 30px auto 30px auto;
+            text-align: center;
+        }
         .temp-con-right{
             flex:1;
             .temp-btn{
@@ -87,6 +119,7 @@
             display: flex;
             flex-wrap: wrap;
             margin: 10px 0 0 ;
+            min-height: 720px;
         }
         .temp-con-content{
             display: flex;

@@ -33,8 +33,9 @@
                             <template slot="title">
                                 <el-avatar :size="50" :src="circleUrl"></el-avatar>
                             </template>
-                            <el-menu-item index="/user/info">用户名：{{userName}}</el-menu-item>
-                            <el-menu-item index="loginout">退出登录</el-menu-item>
+                            <el-menu-item v-if="userName"  index="/info">用户名：{{userName}}</el-menu-item>
+                            <el-menu-item v-if="userName" index="loginout">退出登录</el-menu-item>
+                            <el-menu-item v-else index="loginout">未登录</el-menu-item>
                         </el-submenu>
                     </el-menu>
 

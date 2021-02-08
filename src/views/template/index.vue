@@ -153,6 +153,8 @@
                 margin: 10px 0;
                 .temp-img{
                     width: 308px;
+                    height: 240px;
+                    overflow: hidden;
                 }
                 .li-option-btn{
                     width: 110px;

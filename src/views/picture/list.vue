@@ -20,7 +20,7 @@
             <div class="temp-con-wrap" v-loading="loading">
                 <div class="item-wrap" v-for="item in list" :key="item.id">
                     <div class="item-wrap-img">
-                        <img :src="item.productImgUrl"/>
+                        <img :src=" $baseApi + item.productImgUrl"/>
                     </div>
                     <div class="item-wrap-info">
                         <div class="info-text">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="info-option">
                             <div>
-                                <i class="el-icon-download"></i> 3 次
+                                <i class="el-icon-download"></i> 4 次
                             </div>
                             <div class="option-right">
                                 <i class="el-icon-edit-outline" title="编辑" @click="onEdit(item)" v-if="!item.publish"></i> &emsp;&emsp;
@@ -68,20 +68,20 @@
                     <el-select v-model="form.productType" placeholder="请选择" style="width: 100%">
                         <el-option
                                 v-for="item in typeList"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.dictValue"
+                                :label="item.dictLabel"
+                                :value="item.dictLabel">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="商品类目" prop="imageUrl" >
+                <el-form-item label="商品图片" prop="imageUrl" >
                     <el-upload
                             class="avatar-uploader"
-                            action="/api/file/upload"
+                            :action="$uploadApi"
                             :show-file-list="false"
                             :on-success="uploadSuccess"
                            >
-                        <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
+                        <img v-if="form.imageUrl" :src=" $baseApi +form.imageUrl" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                 </el-form-item>
@@ -102,6 +102,7 @@
 <script>
     import {pictureList, pictureUpdate, pictureAdd, pictureInfo} from '@/api/my-picture/index'
     import leftMenu from '@/components/left-menu'
+    import {getDicts} from '@/api/system/label.js'
     export default {
         components:{ leftMenu },
         data() {
@@ -125,11 +126,7 @@
                 },
                 addVisible: false,
                 labelList:[],
-                typeList: [
-                    {label: '酒水饮料', value: '酒水饮料'},
-                    {label: '膨胀食品', value: '膨胀食品'},
-                    {label: '压缩饼干', value: '压缩饼干'},
-                ],
+                typeList: [],
                 pagination: {
                     total: 0,
                 }
@@ -137,23 +134,24 @@
         },
         mounted() {
             this.init()
+            getDicts('sys_common_picture').then(res=> {
+               this.typeList = res.datas
+            })
         },
         methods: {
             pageSizeChange(e) {
                 this.searchForm.pageSize = e;
-                console.log(this.searchForm)
                 this.init();
             },
             pageCurrentChange(e) {
                 this.searchForm.pageNum = e;
-                console.log(this.searchForm)
                 this.init();
             },
             onSearch () {
 
             },
             uploadSuccess(response) {
-                this.form = Object.assign({}, this.form,{imageUrl: response.datas.url, productImgUrl: response.datas.url})
+                this.form = Object.assign({}, this.form,{imageUrl: response.datas.path, productImgUrl: response.datas.path})
             },
             async onFormSave() {
                 this.form.productLabel = this.labelList.join(',');
